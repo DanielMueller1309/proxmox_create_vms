@@ -1,0 +1,5 @@
+---
+  collections:
+    - community.general
+      #version: 3.5.0
+      #source: https://github.com/ansible-collections/community.general
