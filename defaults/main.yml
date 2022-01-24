@@ -1,21 +1,10 @@
-## DanielMueller1309.proxmox_create_vms
-### Beschreibung
-Erstellt alle in den dafür zuständigem Dictionary aufgeführten VMs auf dem Proxmox Host.
-- Zu Beginn wird ``cloud-init`` und das ebenfalls benötigte Programm ``proxmoxer`` heruntergeladen sowie das cloud-init Image auf Basis von Ubuntu.
-- Danach erstellt das Proxmox_KVM Modul die VMs mit vorgegebenen Einstellungen aus dem Dictionary, Anschließend wird die Systemfestplatte importiert und startet ``cloud-init`` anschließend neu, insofern neue VMs erstellt wurden.
-- Zum Schluss werden die VMs hochgefahren, damit anschließende Loginversuche z.B. über SSH möglich sind, läuft anschließend wird 3 Minuten gewartet. Dies ist nötig um bei einer weiteren Automation zur Ersteinrichtung der VMs, diese auch via SSH erreichbar zu machen.
-
-### Funktioniert auf
-- [x] Debian (Version 10)
-- [ ] Debian (Version 11)
-
-### Variablen + Defaults
-##### Download Variablen
+---
+# defaults file for ansible-cloud-init
+#download vars
 source_url: https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img
 dest_path: /tmp/focal-server-cloudimg-amd64.img
 
-#Statische Variablen für VMs:
-```yml
+#static vars for vms:
 vm_node: 'pve' # nodename which we working on
 vm_api_token_id: 'ci4pve' # the token to use the api
 vm_api_token_secret: "{{ lookup('keepass', 'ci4pve', 'password') }}" # secret to token id
@@ -29,11 +18,7 @@ vm_ciuser: 'user' # cloudinit username
 vm_cipassword: 'hallowelt' # cloudinit user passwort
 vm_net0: 'virtio,bridge=vmbr0' # networkdevice
 vm_nameservers: '192.168.178.11' # ip address of the DNS
-```
-Das scsi0 device wird als platzhalter für das cloudimg benötigt.
-###### veränderliche VM eigenschaften
-
-```yml
+vm_sshkeys: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDAuMew12jn9S1sWc1bCNcPbi1lmEbKSdEoxzKHRlO3IOMivDUUIqmqjaml7ZPun7hL+sBCEVSyKiCr5wNR+VWY6e0p/7E3iDlSlD2fpymff1yWqvsnEmzBnRPGUQdpbGmfNciDt+XnF+nvQgxPBf30BR2//cSBeVpXA1289q0mbc8Z7hDctLjvM43NwjHg0g5KSLx8yXL4VVRg0S/e05azyA7IvQFTf2gVu5NC/rKpI8bs63KMJOR5LTDEYq8V7IlrsBjqTihl+gkXK08x9bqYPWucV3Zg3VGtKcun0WvSmNZPLZ2q5uq+VQFrfv7ioqZVur0XLX78fC9Se+1aC/+Mr0YAdle1P3yenUYFXntTIpI9ID9/EiV0x1cW6dreUy98fVjYmriaXeOK3AxkupQq34aEqXgN8/EH7bJfevvlPYf2JlBIr14MovlIN7zU2sJ2xxQ5jg3H8U2datWwgHoOKt9PAJ7eMsiITUe3310RRQcvkZ/vGHI07ZGfNfleC4fBXcLt+mwaup6rq7pgR+7FMICPiEOn21ektScatVRXGTx47JsMS7YjmAY1qOlUoQC8FXQ8Vp7wunitar6WY45iGTZTDnujkhQfZkllXmpzi8OK0cRwPYfyNPMxaadTY9B9U6CMxjpFV3iq5XgrhhOgtIZfCkW9cX5A7XXy0xXdvQ== user@Acer5' # ssh key (more than one are possible)
 vms:
   - vm_name: testvm1 # name of the vm
     vm_vmid: 101 # vm id
@@ -41,4 +26,3 @@ vms:
   - vm_name: testvm2
     vm_vmid: 102
     vm_ipconfig0: "ip=dhcp"
-```
