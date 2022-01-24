@@ -11,9 +11,10 @@ Erstellt alle in den dafür zuständigem Dictionary aufgeführten VMs auf dem Pr
 
 ### Variablen + Defaults
 ##### Download Variablen
+```yml
 source_url: https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img
 dest_path: /tmp/focal-server-cloudimg-amd64.img
-
+```yml
 #Statische Variablen für VMs:
 ```yml
 vm_node: 'pve' # nodename which we working on
