@@ -1,0 +1,14 @@
+---
+- name: install | Install cloud-init
+  package:
+    name: cloud-init
+    state: present
+  become: true
+
+- name: install | pip install proxmoxer
+  pip:
+    name: proxmoxer
+  environment:
+    HTTP_PROXY: "{{ pip_http_proxy | default() }}"
+    HTTPS_PROXY: "{{ pip_https_proxy | default() }}"
+  become: true
