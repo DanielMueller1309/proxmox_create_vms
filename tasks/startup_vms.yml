@@ -10,3 +10,13 @@
       node: "{{ vm_node }}"
       state: started
     with_items: "{{ vms }}"
+  - name: make snapshot (after pause)
+    community.general.proxmox_snap:
+      api_user: "{{vm_api_user}}"
+      api_password: "{{ vm_api_password }}"
+      api_host: "{{ vm_api_host }}"
+      vmid: "{{ item.vmid }}"
+      state: present
+      snapname: auto_snap_after_create
+    with_items: "{{ addvm.results}}"
+    when: item.changed
