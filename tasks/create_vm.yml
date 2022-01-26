@@ -32,8 +32,6 @@
       sshkeys: "{{ vm_sshkeys }}"
     with_items: "{{ vms }}"
     register: addvm
-    notify:
-      - Pause for 3 minutes to refresh vms with cloudinit setup
     become: true
   - name: import init disk
     ansible.builtin.command:

@@ -10,6 +10,14 @@
       node: "{{ vm_node }}"
       state: started
     with_items: "{{ vms }}"
+
+  # Pause is need cause i don't know but you cant sign in via ssh some secounds after creating vm so please wait
+  - name: Pause for 3 minutes to refresh vms with cloudinit setup
+    pause:
+      minutes: 3
+      prompt: "Please dont skip this task, Pause is need cause i don't know but you cant sign in via ssh and console  some secounds after creating vm so please wait one task (snapshot) left"
+    when: addvm.changed
+
   - name: make snapshot (after pause)
     community.general.proxmox_snap:
       api_user: "{{vm_api_user}}"
