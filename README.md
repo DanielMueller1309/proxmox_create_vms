@@ -22,6 +22,7 @@ vm_api_token_id: 'ci4pve' # the token to use the api
 vm_api_token_secret: "{{ lookup('keepass', 'ci4pve', 'password') }}" # secret to token id
 vm_api_host: 'pve' # hostname of the api host, most same as node
 vm_api_user: 'root@pam' # the token to use the api
+vm_api_password: 'hallowelt' # the password of the api user f.E. root
 vm_scsihw: 'virtio-scsi-pci' # Proxmox scsi module for vm
 vm_scsi0: 'local-lvm:1,format=raw' # scsi0 device in local-lvm with 1GB and format raw
 vm_ide2: 'local:cloudinit,format=qcow2' # ide2 device for cloudinit
