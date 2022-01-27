@@ -33,6 +33,7 @@
     with_items: "{{ vms }}"
     register: addvm
     become: true
+
   - name: import init disk
     ansible.builtin.command:
       cmd: "qm importdisk {{ item.vm_vmid }} {{ dest_path }} local-lvm"
@@ -47,9 +48,9 @@
     with_items: "{{ vms }}"
 
   - name: restart cloud-init.service
-    service:
+    ansible.builtin.service:
       name: cloud-init.service
       enabled: true
       state: restarted
-    become: true
     when: addvm.changed
+    become: true
