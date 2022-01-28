@@ -41,11 +41,18 @@
     with_items: "{{ vms }}"
 
   - name: attach base image disk
-    ansible.builtin.lineinfile:
+    ansible.builtin.replace:
       path: /etc/pve/local/qemu-server/{{ item.vm_vmid }}.conf
-      regexp: '^scsi0:.*'
-      line: 'scsi0: local-lvm:vm-{{ item.vm_vmid }}-disk-1'
+      regexp: '^scsi0:.*,'
+      replace: 'scsi0: local-lvm:vm-{{ item.vm_vmid }}-disk-1,'
     with_items: "{{ vms }}"
+    register: vm_scsi
+
+  - name: resize base disk
+    ansible.builtin.command:
+      cmd: "qm resize {{ item.item.vm_vmid }} scsi0 {{ vm_resize_size }}"
+    with_items: "{{ vm_scsi.results }}"
+    when: item.changed
 
   - name: restart cloud-init.service
     ansible.builtin.service:

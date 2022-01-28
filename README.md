@@ -31,6 +31,7 @@ vm_ciuser: 'user' # cloudinit username
 vm_cipassword: 'hallowelt' # cloudinit user passwort
 vm_net0: 'virtio,bridge=vmbr0' # networkdevice
 vm_nameservers: '192.168.178.11' # ip address of the DNS
+vm_resize_size: '+8G' # how to resize scsi0 value is like under 'man qm resize' shown
 ```
 Das scsi0 device wird als platzhalter für das cloudimg benötigt.
 ###### veränderliche VM eigenschaften
