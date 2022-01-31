@@ -49,11 +49,11 @@
     with_items: "{{ vms }}"
     register: vm_scsi
 
-  - name: resize base disk
-    ansible.builtin.command:
-      cmd: "qm resize {{ item.item.vm_vmid }} scsi0 {{ vm_resize_size }}"
+  - name: resize disks task include
+    include_tasks: resize_disks.yml
     with_items: "{{ vm_scsi.results }}"
-    when: item.changed
+    loop_control:
+      loop_var: outer_item
 
   - name: restart cloud-init.service
     ansible.builtin.service:
