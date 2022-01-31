@@ -1,0 +1,5 @@
+ - name: resize base disk
+   ansible.builtin.command:
+     cmd: "qm resize {{ outer_item.item.vm_vmid }} scsi0 {{ item.vm_resize_size | default(vm_resize_size) }}"
+   with_items: "{{ vms }}"
+   when: item.vm_vmid == outer_item.item.vm_vmid and outer_item.changed
