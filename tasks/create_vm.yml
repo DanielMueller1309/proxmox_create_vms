@@ -15,6 +15,7 @@
       api_host: "{{ vm_api_host }}"
       api_user: "{{vm_api_user}}"
       name: "{{ item.vm_name }}"
+      memory: "{{ item.vm_memory | default(vm_memory) }}"
       scsihw: "{{ vm_scsihw }}"
       scsi:
        scsi0: "{{ vm_scsi0 }}"
