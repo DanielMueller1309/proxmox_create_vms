@@ -31,6 +31,7 @@
         ipconfig0: "{{ item.vm_ipconfig0 | default(vm_ipconfig0) }}"
       nameservers: "{{ item.vm_nameservers | default(vm_nameservers) }}"
       sshkeys: "{{ item.vm_sshkeys | default(vm_sshkeys) }}"
+      agent: "{{ item.vm_agent | default(vm_agent) }}"
     with_items: "{{ vms }}"
     register: addvm
     become: true

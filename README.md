@@ -34,6 +34,7 @@ vm_net0: 'virtio,bridge=vmbr0' # networkdevice
 vm_nameservers: '192.168.178.11' # ip address of the DNS
 vm_resize_size: '+8G' # how to resize scsi0 value is like under 'man qm resize' shown
 vm_ipconfig0: 'ip=dhcp' # set ip of vm and give gateway
+vm_agent: 'yes' # can be 'yes' or 'no' to specify if the QEMU Guest Agent should be enabled/disabled.
 ```
 Das scsi0 device wird als platzhalter für das cloudimg benötigt.
 ###### unique VM settings
