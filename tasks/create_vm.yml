@@ -6,7 +6,8 @@
     environment:
       HTTP_PROXY: "{{ http_proxy | default() }}"
       HTTPS_PROXY: "{{ http_proxy | default() }}"
-  - name: Create empty VM using proxmox_kvm and cloudinit user
+
+  - name: Destroy VM if state absent
     community.general.proxmox_kvm:
       node: "{{ item.vm_node | default(vm_node) }}"
       api_token_id: "{{ item.vm_api_token_id | default(vm_api_token_id)}}"
@@ -15,41 +16,64 @@
       api_host: "{{ item.vm_api_host | default(vm_api_host) }}"
       api_user: "{{ item.vm_api_user | default(vm_api_user) }}"
       name: "{{ item.vm_name }}"
-      memory: "{{ item.vm_memory | default(vm_memory) }}"
-      scsihw: "{{ item.vm_scsihw | default(vm_scsihw) }}"
-      scsi:
-       scsi0: "{{ item.vm_scsi0 | default(vm_scsi0) }}"
-      ide:
-        ide2: "{{ item.vm_ide2 | default(vm_ide2) }}"
-      bootdisk: "{{ item.vm_bootdisk | default(vm_bootdisk) }}"
-      ciuser: "{{ item.vm_ciuser | default(vm_ciuser) }}"
-      cipassword: "{{ item.vm_cipassword | default(vm_cipassword) }}"
       vmid: "{{ item.vm_vmid }}"
-      net:
-        net0: "{{ item.vm_net0 | default(vm_net0)}}"
-      ipconfig:
-        ipconfig0: "{{ item.vm_ipconfig0 | default(vm_ipconfig0) }}"
-      nameservers: "{{ item.vm_nameservers | default(vm_nameservers) }}"
-      sshkeys: "{{ item.vm_sshkeys | default(vm_sshkeys) }}"
-      agent: "{{ item.vm_agent | default(vm_agent) }}"
+      update: yes
+      force: yes
+      skiplock: yes
+      state: 'absent'
     with_items: "{{ vms }}"
-    register: addvm
+    when: item.vm_state == 'absent'
     become: true
 
-  - name: import init disk
-    ansible.builtin.command:
-      cmd: "qm importdisk {{ item.vm_vmid }} {{ dest_path }} local-lvm"
-      creates: "/dev/mapper/pve-vm--{{ item.vm_vmid }}--disk--1"
-    with_items: "{{ vms }}"
 
-  - name: attach base image disk
-    ansible.builtin.replace:
-      path: /etc/pve/local/qemu-server/{{ item.vm_vmid }}.conf
-      regexp: '^scsi0:.*,'
-      replace: 'scsi0: local-lvm:vm-{{ item.vm_vmid }}-disk-1,'
-    with_items: "{{ vms }}"
-    register: vm_scsi
+  - name: Create empty VM using proxmox_kvm and cloudinit user
+    block:
+      - name: Create VM Shell
+        community.general.proxmox_kvm:
+          node: "{{ item.vm_node | default(vm_node) }}"
+          api_token_id: "{{ item.vm_api_token_id | default(vm_api_token_id)}}"
+          api_password: "{{ item.vm_api_token_secret | default(vm_api_token_secret) }}"
+          api_token_secret: "{{ item.vm_api_token_secret | default(vm_api_token_secret) }}"
+          api_host: "{{ item.vm_api_host | default(vm_api_host) }}"
+          api_user: "{{ item.vm_api_user | default(vm_api_user) }}"
+          name: "{{ item.vm_name }}"
+          memory: "{{ item.vm_memory | default(vm_memory) }}"
+          scsihw: "{{ item.vm_scsihw | default(vm_scsihw) }}"
+          scsi:
+            scsi0: "{{ item.vm_scsi0 | default(vm_scsi0) }}"
+          ide:
+            ide2: "{{ item.vm_ide2 | default(vm_ide2) }}"
+          bootdisk: "{{ item.vm_bootdisk | default(vm_bootdisk) }}"
+          ciuser: "{{ item.vm_ciuser | default(vm_ciuser) }}"
+          cipassword: "{{ item.vm_cipassword | default(vm_cipassword) }}"
+          vmid: "{{ item.vm_vmid }}"
+          net:
+            net0: "{{ item.vm_net0 | default(vm_net0)}}"
+          ipconfig:
+            ipconfig0: "{{ item.vm_ipconfig0 | default(vm_ipconfig0) }}"
+          nameservers: "{{ item.vm_nameservers | default(vm_nameservers) }}"
+          sshkeys: "{{ item.vm_sshkeys | default(vm_sshkeys) }}"
+          agent: "{{ item.vm_agent | default(vm_agent) }}"
+        with_items: "{{ vms }}"
+        #when: item.vm_state == 'present'
+        register: addvm
+        become: true
 
+      - name: import init disk
+        ansible.builtin.command:
+          cmd: "qm importdisk {{ item.vm_vmid }} {{ dest_path }} local-lvm"
+          creates: "/dev/mapper/pve-vm--{{ item.vm_vmid }}--disk--1"
+        with_items: "{{ vms }}"
+        #when: item.vm_state == 'present'
+
+      - name: attach base image disk
+        ansible.builtin.replace:
+          path: /etc/pve/local/qemu-server/{{ item.vm_vmid }}.conf
+          regexp: '^scsi0:.*,'
+          replace: 'scsi0: local-lvm:vm-{{ item.vm_vmid }}-disk-1,'
+        with_items: "{{ vms }}"
+        register: vm_scsi
+    when: item.vm_state == 'present'
   - name: resize disks task include
     include_tasks: resize_disks.yml
     with_items: "{{ vm_scsi.results }}"

@@ -28,11 +28,14 @@ vms:
   - vm_name: testvm1 # name of the vm
     vm_vmid: 101 # vm id
     vm_ipconfig0: 'ip=192.168.178.15/24,gw=192.168.178.1' # set ip of vm and give gateway
+    vm_state: 'present' #only can be set here in list not in static area
   - vm_name: testvm2
     vm_vmid: 102
     vm_ipconfig0: "ip=dhcp"
+    vm_state: 'present'
   - vm_name: testvm3
     vm_vmid: 103
     vm_ipconfig0: "ip_dhcp"
     vm_memory: '2048'
     vm_resize_size: "+20G"
+    vm_state: 'absent'
