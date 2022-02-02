@@ -10,7 +10,7 @@
       node: "{{ vm_node }}"
       state: started
     with_items: "{{ vms }}"
-
+    when: item.vm_state == 'present'
   # Pause is need cause i don't know but you cant sign in via ssh some secounds after creating vm so please wait
   - name: Pause for 3 minutes to refresh vms with cloudinit setup
     pause:
