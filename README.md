@@ -44,8 +44,10 @@ have to set in ´vms´ list and not in static vars
 vms:
   - vm_name: testvm1 # name of the vm
     vm_vmid: 101 # vm id
+    vm_state: 'present' #only can be set here in list not in static area
   - vm_name: testvm2
     vm_vmid: 102
+    vm_state: 'present' #only can be set here in list not in static area
 ```
 ###some examples for vms lists:
 ```yml
@@ -53,4 +55,5 @@ vms:
   - vm_name: t1
     vm_vmid: 290
     vm_ipconfig0: 'ip=192.168.178.15/24,gw=192.168.178.1' # set ip of vm and give gateway
+    vm_state: 'present' ##required## only can be set here in list not in static area
 ```
