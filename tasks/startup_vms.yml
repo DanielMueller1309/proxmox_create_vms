@@ -12,9 +12,9 @@
     with_items: "{{ vms }}"
     when: item.vm_state == 'present'
   # Pause is need cause i don't know but you cant sign in via ssh some secounds after creating vm so please wait
-  - name: Pause for 3 minutes to refresh vms with cloudinit setup
+  - name: Pause for secound set in create_vm_waiting_time var to refresh vms with cloudinit setup
     pause:
-      minutes: 3
+      seconds: "{{ create_vm_waiting_time }}"
       prompt: "Please dont skip this task, Pause is need cause i don't know but you cant sign in via ssh and console  some secounds after creating vm so please wait one task (snapshot) left"
     when: addvm.changed
 

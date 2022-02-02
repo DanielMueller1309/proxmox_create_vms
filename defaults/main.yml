@@ -39,3 +39,6 @@ vms:
     vm_memory: '2048'
     vm_resize_size: "+20G"
     vm_state: 'absent'
+
+#waiting time after create for custom set, test when you can login into webshell or ssh then stop the time, this is the waiting time you have to set
+create_vm_waiting_time: 120
