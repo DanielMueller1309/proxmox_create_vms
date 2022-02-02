@@ -35,6 +35,8 @@ vm_nameservers: '192.168.178.11' # ip address of the DNS
 vm_resize_size: '+8G' # how to resize scsi0 value is like under 'man qm resize' shown
 vm_ipconfig0: 'ip=dhcp' # set ip of vm and give gateway
 vm_agent: 'yes' # can be 'yes' or 'no' to specify if the QEMU Guest Agent should be enabled/disabled.
+#waiting time after create for custom set, test when you can login into webshell or ssh then stop the time, this is the waiting time you have to set
+create_vm_waiting_time: 120
 ```
 Das scsi0 device wird als platzhalter für das cloudimg benötigt.
 ###### unique VM settings
