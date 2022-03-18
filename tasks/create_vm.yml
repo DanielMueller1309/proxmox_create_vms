@@ -1,8 +1,9 @@
 ---
   - name: download cloud image
     get_url:
-      url: "{{ source_url }}"
-      dest: "{{ dest_path }}"
+      url: "{{ item.source_url | default(source_url) }}"
+      dest: "{{ item.dest_path | default(dest_path) }}"
+    with_items: "{{ vms }}"
     environment:
       HTTP_PROXY: "{{ http_proxy | default() }}"
       HTTPS_PROXY: "{{ http_proxy | default() }}"
