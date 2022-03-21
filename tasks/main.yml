@@ -1,6 +1,9 @@
 ---
-  - include_tasks: install.yml
+  - name: include install requirements task
+    include_tasks: install.yml
 
-  - include_tasks: create_vm.yml
+  - name: include create_vm task
+    include_tasks: create_vm.yml
 
-  - include_tasks: startup_vms.yml
+  - name: include startup_vm task
+    include_tasks: startup_vms.yml
