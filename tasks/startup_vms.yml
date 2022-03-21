@@ -26,5 +26,7 @@
       vmid: "{{ item.vmid }}"
       state: present
       snapname: auto_snap_after_create
+      vmstate: true
+      timeout: "{{ vm_timeout | default(60) }}"
     with_items: "{{ addvm.results}}"
     when: item.changed
