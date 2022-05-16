@@ -37,9 +37,13 @@
           sshkeys: "{{ item.vm_sshkeys | default(vm_sshkeys) }}"
           agent: "{{ item.vm_agent | default(vm_agent) }}"
         with_items: "{{ vms }}"
-        #when: item.vm_state == 'present'
         register: addvm
         become: true
+
+     #- name: debug show addvm
+     #  debug:
+     #    msg: "{{ item.changed }}"
+     #  with_items: addvm
 
       - name: import init disk
         ansible.builtin.command:
